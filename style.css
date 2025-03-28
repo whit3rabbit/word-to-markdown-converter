@@ -1,0 +1,694 @@
+/* Basic Reset & Defaults */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    /* Light Theme (Default) */
+    --bg-color: #ffffff;
+    --text-color: #24292f; /* GitHub-like text */
+    --primary-color: #0969da; /* GitHub blue */
+    --secondary-color: #f6f8fa; /* GitHub light grey */
+    --border-color: #d0d7de; /* GitHub border */
+    --link-color: #0969da;
+    --pre-bg-color: #f6f8fa;
+    --modal-bg: rgba(0, 0, 0, 0.4);
+    --modal-content-bg: #ffffff;
+    --button-text-color: #ffffff;
+    --button-secondary-bg: #2c313a; /* GitHub secondary button */
+    --button-secondary-hover-bg: #444c56;
+    --button-secondary-text-color: #cdd9e5;
+    --error-bg: #ffebe9;
+    --error-text: #d73a49;
+    --error-border: #ffccc7;
+    --success-bg: #dafbe1;
+    --success-text: #1f883d;
+    --success-border: #abe8b8;
+    --info-bg: #ddf4ff;
+    --info-text: #0969da;
+    --info-border: #b6e3ff;
+    --warning-bg: #fff8c5;
+    --warning-text: #9a6700;
+    --warning-border: #ffec80;
+
+
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+html.dark-mode {
+    /* Dark Theme */
+    --bg-color: #0d1117; /* GitHub dark bg */
+    --text-color: #c9d1d9; /* GitHub dark text */
+    --primary-color: #58a6ff; /* GitHub dark blue */
+    --secondary-color: #161b22; /* GitHub dark grey */
+    --border-color: #30363d; /* GitHub dark border */
+    --link-color: #58a6ff;
+    --pre-bg-color: #161b22;
+    --modal-bg: rgba(0, 0, 0, 0.6);
+    --modal-content-bg: #161b22;
+    --button-text-color: #ffffff;
+    --button-secondary-bg: #21262d;
+    --button-secondary-hover-bg: #30363d;
+    --button-secondary-text-color: #c9d1d9;
+    --error-bg: #2f1a1c;
+    --error-text: #f85149;
+    --error-border: #502426;
+    --success-bg: #172d1f;
+    --success-text: #56d364;
+    --success-border: #2a4631;
+    --info-bg: #112a40;
+    --info-text: #58a6ff;
+    --info-border: #1e415c;
+    --warning-bg: #3a2d0b;
+    --warning-text: #e3b341;
+    --warning-border: #57461a;
+}
+
+html {
+    font-size: 16px; /* Base font size */
+}
+
+body {
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+header {
+    background-color: var(--secondary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+header h1 {
+    font-size: 1.25rem; /* Slightly smaller */
+    font-weight: 600;
+    margin: 0;
+}
+
+header nav {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+header nav a,
+header nav button {
+    color: var(--text-color);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem; /* Adjust size for icons */
+    padding: 0.2rem;
+    display: flex;
+    align-items: center;
+    border-radius: 4px; /* Subtle rounding */
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+header nav a:hover,
+header nav button:hover {
+    color: var(--link-color);
+    background-color: color-mix(in srgb, var(--border-color) 20%, transparent); /* Subtle hover */
+}
+header nav button:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 1px;
+}
+
+
+main {
+    flex-grow: 1;
+    padding: 1.5rem;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+section {
+    margin-bottom: 2rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.3em;
+    font-weight: 600;
+    color: var(--text-color); /* Match text color */
+}
+
+/* Upload Area */
+#drop-zone {
+    border: 2px dashed var(--border-color);
+    border-radius: 6px;
+    padding: 2rem 1rem;
+    text-align: center;
+    background-color: var(--secondary-color);
+    margin-bottom: 1rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+}
+
+#drop-zone.drag-over {
+    border-color: var(--primary-color);
+    background-color: color-mix(in srgb, var(--primary-color) 10%, var(--secondary-color));
+}
+
+#drop-zone p {
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    pointer-events: none; /* Prevent text selection interfering with drop */
+}
+
+.button, button {
+    display: inline-block;
+    padding: 0.5rem 1rem; /* GitHub-like padding */
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+    border: 1px solid var(--primary-color); /* Add border */
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem; /* 14px */
+    font-weight: 500;
+    line-height: 1.25; /* 20px */
+    text-align: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+    vertical-align: middle; /* Align nicely with text */
+    margin-right: 0.5rem; /* Spacing between buttons */
+}
+/* Ensure button resets */
+button {
+    font-family: inherit;
+}
+
+.button:hover, button:hover {
+    background-color: color-mix(in srgb, var(--primary-color) 85%, black);
+    border-color: color-mix(in srgb, var(--primary-color) 85%, black);
+    text-decoration: none; /* Remove underline on hover */
+}
+.button:focus-visible, button:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 30%, transparent);
+}
+
+
+button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    background-color: var(--primary-color); /* Keep color but make opaque */
+    border-color: var(--primary-color);
+}
+
+/* Secondary Button Style */
+.button-secondary {
+    background-color: var(--button-secondary-bg);
+    color: var(--button-secondary-text-color);
+    border-color: var(--border-color); /* Use standard border or a slightly darker one */
+}
+.button-secondary:hover {
+    background-color: var(--button-secondary-hover-bg);
+    border-color: var(--border-color);
+}
+.button-secondary:disabled {
+     background-color: var(--button-secondary-bg);
+     border-color: var(--border-color);
+     opacity: 0.65;
+}
+
+
+#file-info {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-color);
+}
+
+/* Status Area */
+#status-area {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    border: 1px solid transparent;
+    display: none; /* Initially hidden */
+}
+#status-area.success {
+    background-color: var(--success-bg);
+    color: var(--success-text);
+    border-color: var(--success-border);
+    display: block;
+}
+#status-area.error {
+    background-color: var(--error-bg);
+    color: var(--error-text);
+    border-color: var(--error-border);
+    display: block;
+}
+#status-area.info {
+    background-color: var(--info-bg);
+    color: var(--info-text);
+    border-color: var(--info-border);
+    display: block;
+}
+#status-area.warning { /* Added warning style */
+    background-color: var(--warning-bg);
+    color: var(--warning-text);
+    border-color: var(--warning-border);
+    display: block;
+}
+
+
+/* Converter Output Area */
+#converter-output {
+    display: flex;
+    gap: 1.5rem;
+    min-height: 400px;
+}
+
+/* Style to hide preview area if disabled */
+#converter-output.preview-disabled #preview-area {
+    display: none;
+}
+/* Adjust markdown area to take full width if preview is disabled */
+#converter-output.preview-disabled #markdown-output-area {
+    flex-basis: 100%;
+    max-width: 100%; /* Ensure it doesn't overflow */
+}
+
+#markdown-output-area,
+#preview-area {
+    flex: 1 1 50%; /* Allow shrinking and growing, base 50% */
+    min-width: 0; /* Prevent flex items from overflowing */
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-color); /* Match body background */
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: flex-basis 0.3s ease, max-width 0.3s ease, display 0.3s ease;
+}
+
+#converter-output h2 { /* Section headers within output area */
+    padding: 0.5rem 1rem;
+    margin: 0;
+    border: none;
+    background-color: var(--secondary-color);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.875rem; /* Smaller header */
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+#converter-output .controls {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--secondary-color);
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap; /* Allow controls to wrap */
+    justify-content: flex-start; /* Align to the left by default */
+}
+
+#converter-output .controls button {
+    padding: 0.25rem 0.75rem; /* Smaller buttons */
+    font-size: 0.8rem;
+}
+
+#clear-file-button {
+    margin-left: auto; /* Push to the right */
+}
+
+#copy-markdown-button, #download-markdown-button {
+    margin-right: 0.25rem; /* Reduced margin between first two buttons */
+}
+
+#converter-output .controls .note {
+    font-size: 0.8rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+#markdown-output { /* Textarea */
+    flex-grow: 1;
+    width: 100%;
+    border: none;
+    padding: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    resize: none;
+    outline: none;
+    min-height: 200px; /* Ensure minimum height */
+}
+
+#html-preview { /* Preview Div */
+    flex-grow: 1;
+    padding: 1rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow-y: auto;
+    word-wrap: break-word;
+    min-height: 200px; /* Ensure minimum height */
+}
+
+/* Styles for rendered Markdown content (like GitHub) */
+.markdown-body {
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    font-size: 1rem;
+}
+.markdown-body > *:first-child { margin-top: 0 !important; }
+.markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4, .markdown-body h5, .markdown-body h6 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--text-color);
+}
+.markdown-body h1 { font-size: 2em; border-bottom: 1px solid var(--border-color); padding-bottom: 0.3em; }
+.markdown-body h2 { font-size: 1.5em; border-bottom: 1px solid var(--border-color); padding-bottom: 0.3em; }
+.markdown-body h3 { font-size: 1.25em; }
+.markdown-body h4 { font-size: 1em; }
+.markdown-body h5 { font-size: .875em; }
+.markdown-body h6 { font-size: .85em; color: #6a737d; } /* Dim h6 slightly */
+.markdown-body p { margin-bottom: 16px; }
+.markdown-body ul, .markdown-body ol { margin-bottom: 16px; padding-left: 2em; }
+.markdown-body li { margin-bottom: 0.25em; }
+.markdown-body li > ul, .markdown-body li > ol { margin-top: 0.25em; margin-bottom: 0;}
+.markdown-body blockquote {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 16px;
+    padding: 0 1em;
+    color: color-mix(in srgb, var(--text-color) 75%, transparent);
+    border-left: 0.25em solid var(--border-color);
+    /* background-color: var(--secondary-color); // Optional subtle background */
+}
+.markdown-body blockquote > :first-child { margin-top: 0; }
+.markdown-body blockquote > :last-child { margin-bottom: 0; }
+
+.markdown-body code {
+    font-family: var(--font-mono);
+    font-size: 85%;
+    background-color: color-mix(in srgb, var(--border-color) 30%, transparent);
+    padding: 0.2em 0.4em;
+    border-radius: 6px;
+    margin: 0 0.1em; /* Slight spacing */
+}
+.markdown-body pre {
+    font-family: var(--font-mono);
+    background-color: var(--pre-bg-color);
+    padding: 16px;
+    border-radius: 6px;
+    overflow: auto; /* Changed from overflow-x for vertical scroll too */
+    margin-bottom: 16px;
+    font-size: 85%;
+    line-height: 1.45;
+    border: 1px solid var(--border-color); /* Subtle border */
+}
+.markdown-body pre code {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    font-size: 100%; /* Inherit size from pre */
+    line-height: inherit; /* Inherit line height */
+    word-wrap: normal; /* Prevent wrapping within code block */
+}
+.markdown-body table {
+    border-collapse: collapse;
+    margin-top: 0;
+    margin-bottom: 16px;
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow: auto;
+    border-spacing: 0;
+    border: 1px solid var(--border-color); /* Outer border */
+}
+.markdown-body th, .markdown-body td {
+    border: 1px solid var(--border-color);
+    padding: 6px 13px;
+}
+.markdown-body thead th { /* Header specific */
+     background-color: var(--secondary-color);
+     font-weight: 600;
+     border-top: none; /* Remove double border */
+     border-left: none;
+     border-right: none;
+}
+.markdown-body tr {
+     background-color: var(--bg-color);
+     border-top: 1px solid var(--border-color);
+}
+.markdown-body tbody tr:nth-child(odd) { /* Subtle striping */
+     background-color: var(--secondary-color);
+}
+.markdown-body tbody tr:hover { /* Hover effect */
+    background-color: color-mix(in srgb, var(--primary-color) 5%, var(--secondary-color));
+}
+.markdown-body img {
+    max-width: 100%;
+    height: auto;
+    background-color: var(--bg-color);
+    box-sizing: content-box; /* GitHub style */
+}
+.markdown-body a {
+    color: var(--link-color);
+    text-decoration: none;
+}
+.markdown-body a:hover {
+    text-decoration: underline;
+}
+.markdown-body hr {
+    border: 0;
+    height: .25em;
+    padding: 0;
+    margin: 24px 0;
+    background-color: var(--border-color);
+    border: 0;
+}
+
+
+/* Settings Modal */
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: var(--modal-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.modal.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: var(--modal-content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0;
+    max-width: 600px; /* Slightly wider */
+    width: 90%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+#close-settings-button {
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 0 0.2rem;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+#close-settings-button:hover {
+    opacity: 1;
+}
+#close-settings-button:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 1px;
+}
+
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.modal-body fieldset {
+    border: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 6px;
+    background-color: var(--secondary-color); /* Subtle background for fieldsets */
+}
+
+.modal-body legend {
+    padding: 0 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    background-color: var(--modal-content-bg); /* Match modal background to 'cut out' border */
+}
+
+.modal-body label {
+    display: block;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+.modal-body label:last-of-type {
+    margin-bottom: 0; /* Remove margin from last label in group */
+}
+
+.modal-body label input[type="radio"],
+.modal-body label input[type="checkbox"] {
+    margin-right: 0.5rem;
+    vertical-align: middle; /* Align better with text */
+}
+.modal-body input[type="text"] { /* If added later */
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin-top: 0.2rem;
+    font-size: 0.875rem;
+}
+.modal-body input[type="text"]:focus {
+     border-color: var(--primary-color);
+     outline: none;
+     box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 30%, transparent);
+}
+
+/* Settings Action Buttons container */
+.settings-actions {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 0.5rem; /* Space between buttons */
+    margin-top: 1rem;
+    padding-top: 1rem; /* Space above buttons */
+    border-top: 1px solid var(--border-color); /* Separator line */
+}
+.settings-actions button {
+     margin-right: 0; /* Remove default margin if using gap */
+}
+
+/* Loader Overlay */
+.loader-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.loader-overlay.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.spinner {
+    border: 5px solid var(--secondary-color);
+    border-top: 5px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 1rem;
+}
+
+#loader-message {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* Utility Classes */
+.hidden {
+    display: none !important; /* Use important if needed to override */
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    html { font-size: 15px; } /* Adjust base size slightly */
+    header { padding: 0.5rem 1rem; }
+    header h1 { font-size: 1.1rem; }
+    main { padding: 1rem; }
+    #converter-output {
+        flex-direction: column;
+        min-height: auto;
+    }
+    #markdown-output-area,
+    #preview-area {
+        min-height: 250px; /* Adjust height */
+        flex-basis: auto; /* Reset flex basis */
+        max-width: none; /* Reset max width */
+    }
+    .modal-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    .settings-actions {
+        flex-direction: column; /* Stack buttons on small screens */
+        align-items: stretch; /* Make buttons full width */
+    }
+    .settings-actions button {
+        width: 100%;
+    }
+
+}

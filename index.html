@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert Word documents (.docx) to Markdown entirely in your browser. Client-side processing ensures privacy.">
+    <title>Word to Markdown Converter</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- highlight.js CSS (choose a theme, e.g., github or github-dark for dark mode awareness) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
+</head>
+<body>
+    <header>
+        <h1>Word-to-Markdown Converter</h1>
+        <nav>
+            <button id="settings-button" aria-label="Open Settings" title="Settings" aria-expanded="false">⚙️</button>
+            <button id="theme-button" aria-label="Toggle Theme" title="Toggle Theme">🌗</button>
+            <a href="https://github.com/whit3rabbit/word-to-markdown-converter" target="_blank" rel="noopener noreferrer" aria-label="View on GitHub" title="View on GitHub">
+                <!-- GitHub SVG Icon -->
+                <svg height="24" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="upload-area" aria-labelledby="upload-heading">
+            <h2 id="upload-heading">1. Upload Document</h2>
+            <div id="drop-zone" role="region" aria-label="Drag and drop area for docx files">
+                <p>Drag & Drop a .docx file here</p>
+                <p>or</p>
+                <label for="file-input" class="button">Select File</label>
+                <input type="file" id="file-input" accept=".docx" hidden>
+            </div>
+            <div id="file-info" aria-live="polite"></div>
+        </section>
+
+        <section id="status-area" aria-live="assertive">
+            <!-- Status messages will appear here -->
+        </section>
+
+        <!-- Added id to parent for CSS targeting -->
+        <section id="converter-output">
+            <div id="markdown-output-area">
+                <h2>2. Markdown Output</h2>
+                <div class="controls">
+                    <button id="copy-markdown-button" title="Copy Markdown to Clipboard" disabled>Copy Markdown</button>
+                    <button id="download-markdown-button" title="Download as .md file" disabled>Download .md</button>
+                    <button id="clear-file-button" title="Clear file from memory" disabled class="button-secondary">Clear File</button>
+                </div>
+                <textarea id="markdown-output" readonly placeholder="Markdown will appear here..." aria-label="Generated Markdown Output"></textarea>
+            </div>
+
+            <div id="preview-area">
+                <h2>3. Rendered Preview</h2>
+                <div class="controls">
+                    <span class="note">(GitHub Flavored Markdown)</span>
+                </div>
+                <div id="html-preview" class="markdown-body" aria-label="Rendered HTML Preview">
+                    <!-- Rendered HTML will appear here -->
+                     <p><i>Preview will render here...</i></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Settings Panel (Modal) -->
+    <div id="settings-panel" class="modal" aria-hidden="true" role="dialog" aria-labelledby="settings-title">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h3 id="settings-title">Conversion Settings</h3>
+                <button id="close-settings-button" aria-label="Close Settings" title="Close Settings">×</button>
+            </header>
+            <!-- Added form element for easier data gathering -->
+            <form class="modal-body" onsubmit="return false;"> <!-- Prevent default form submission -->
+                <fieldset>
+                    <legend>Image Handling</legend>
+                    <label>
+                        <input type="radio" name="image-handling" value="base64"> Embed as Base64 Data URI (Large Output!)
+                    </label>
+                    <label>
+                        <input type="radio" name="image-handling" value="ignore"> Ignore Images (No Image Output)
+                    </label>
+                </fieldset>
+
+                 <fieldset>
+                    <legend>List Style (Bulleted)</legend>
+                    <label><input type="radio" name="list-style" value="-"> Hyphen (-)</label>
+                    <label><input type="radio" name="list-style" value="*"> Asterisk (*)</label>
+                    <label><input type="radio" name="list-style" value="+"> Plus (+)</label>
+                </fieldset>
+
+                 <fieldset>
+                    <legend>Line Breaks (Shift+Enter)</legend>
+                    <label><input type="radio" name="line-break" value="space"> Trailing Double Space</label>
+                    <label><input type="radio" name="line-break" value="br"> HTML <br> Tag</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Underline Handling</legend>
+                    <label><input type="radio" name="underline-handling" value="ignore"> Ignore</label>
+                    <label><input type="radio" name="underline-handling" value="u"> Use <u> Tag</label>
+                    <label><input type="radio" name="underline-handling" value="italic"> Convert to Italic (*)</label>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Performance</legend>
+                    <label>
+                        <input type="checkbox" name="disable-preview" id="disable-preview"> Disable Live Preview (Saves Memory)
+                    </label>
+                </fieldset>
+
+                <hr style="margin: 1.5rem 0;">
+
+                <!-- Updated Buttons Section -->
+                <div class="settings-actions">
+                    <button type="button" id="save-settings-button" class="button">Save Preferences</button>
+                    <button type="button" id="reset-settings-button" class="button button-secondary">Reset to Default</button>
+                </div>
+            </form> <!-- End Form -->
+        </div> <!-- End modal-content -->
+    </div> <!-- End settings-panel modal -->
+
+    <!-- Loader Overlay -->
+    <div id="loader" class="loader-overlay" aria-hidden="true">
+        <div class="spinner"></div>
+        <p id="loader-message">Processing...</p>
+    </div>
+
+    <!-- Libraries (Updated Versions & Correct Integrity Hashes) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.9.0/mammoth.browser.min.js" integrity="sha512-I6VLiRYuVjvj3wqk3u3/qBYJEfo0I3RgHhnCk6kuXUp/QudbzsgspGZTAbyG82sheQQVdPU0zCiytfSckC5VXQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js" integrity="sha512-rPuOZPx/WHMHNx2RoALKwiCDiDrCo4ekUctyTYKzBo8NGA79NcTW2gfrbcCL2RYL7RdjX2v9zR0fKyI4U4kPew==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js" integrity="sha512-EBLzUL8XLl+va/zAsmXwS7Z2B1F9HUHkZwyS/VKwh3S7T/U0nF4BaU29EP/ZSf6zgiIxYAnKLu6bJ8dqpmX5uw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Optional: Load specific languages for highlight.js if needed, or use the common pack -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/javascript.min.js"></script> -->
+
+    <!-- Your Custom Script -->
+    <script src="script.js"></script>
+</body>
+</html>
